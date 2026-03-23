@@ -161,9 +161,7 @@
             "emoji": true,
             "list": true,
             "targets": {
-                "clash": "xxx-clash",
-                "singbox": "xxx-singbox",
-                "v2ray": "xxx-v2ray"
+                "clash": "xxx-clash"
             },
             "regularize": {
                 "enable": false,
@@ -181,13 +179,6 @@
             "xxx-clash": {
                 "username": "",
                 "folderid": "",
-                "fileid": ""
-            },
-            "xxx-singbox": {
-                "fileid": ""
-            },
-            "xxx-v2ray": {
-                "username": "",
                 "fileid": ""
             },
             "crawledsubs": {
