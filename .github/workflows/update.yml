@@ -1,17 +1,19 @@
 name: Auto Update Proxies
 
+# 触发条件配置
 on:
   schedule:
+    # 定时任务：每天 UTC 时间 0点和12点运行（对应北京时间早上8点和晚上8点）
     - cron: '0 0,12 * * *'
-  workflow_dispatch:
+  workflow_dispatch: # 允许在网页上随时点击按钮手动运行
 
-# 添加全局环境变量，消除 Node.js 20 弃用警告
+# 消除 Node.js 20 弃用警告
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   update-proxies:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest # 使用最新的 Ubuntu 环境
 
     steps:
       - name: 1. 拉取仓库代码
@@ -22,31 +24,30 @@ jobs:
       - name: 2. 设置 Python 环境
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
-          cache: 'pip'
+          python-version: '3.10' # 推荐使用 3.10
+          cache: 'pip' # 开启缓存加速后续运行
 
       - name: 3. 安装依赖包
         run: |
           python -m pip install --upgrade pip
+          # 注意：requirements.txt 也是在 subscribe 目录下
+          cd subscribe
           pip install -r requirements.txt
 
-      - name: 4. 执行聚合爬虫脚本 (含路径调试)
+      - name: 4. 执行聚合爬虫脚本
         run: |
-          # 打印当前目录结构，方便在日志中排查配置文件是否存在
-          echo "=== 当前目录文件列表 ==="
-          ls -la
-          echo "=== config 目录文件列表 ==="
-          ls -la subscribe/config/ || echo "config 目录不存在"
+          # 关键修复：进入包含 process.py 的目录
+          cd subscribe
           
-          # 执行脚本（如果你指定了特定配置文件，请修改下方命令，如 python process.py -c my_config.json）
+          # 执行脚本
           python process.py
         env:
-          TZ: Asia/Shanghai
+          TZ: Asia/Shanghai # 设置时区，避免日志时间错乱
 
       - name: 5. 将更新后的节点文件提交回仓库
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Auto update proxies [skip ci]"
-          branch: main
+          branch: main # 请确保这里与您仓库的主分支名称一致（通常是 main 或 master）
           commit_user_name: "github-actions[bot]"
           commit_user_email: "github-actions[bot]@users.noreply.github.com"
