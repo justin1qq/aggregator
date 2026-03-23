@@ -8,9 +8,6 @@
             "enable": true,
             "pages": 2
         },
-        "telegram": {
-            "enable": false
-        },
         "pages": [
             {
                 "enable": true,
@@ -18,5 +15,9 @@
                 "multiple": true
             }
         ]
+    },
+    "storage": {
+        "engine": "github",
+        "items": {}
     }
 }
